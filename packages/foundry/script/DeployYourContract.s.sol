@@ -15,7 +15,7 @@ contract DeployYourContract is ScaffoldETHDeploy {
       new ArtistNFT("SHAN", "SH4", deployer, uint256(5));
     ART art = new ART();
     MockUSDC usdc = new MockUSDC();
-    Staking staking = new Staking(1 days, 1, 20, address(art), address(usdc), 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    Staking staking = new Staking(1 hours, 10, 300, address(usdc), address(art), 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     console.logString(
       string.concat(
         "ArtistFactory deployed at: ", vm.toString(address(artistFactory))
