@@ -5,10 +5,29 @@ import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
+import React, { createContext, useState } from "react";
+import { useContext } from "react";
+import { OktoProvider, BuildType } from "okto-sdk-react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
 
+// Create a context with a default value
+export const AppContext = createContext();
+
+export const AppContextProvider = ({ children }) => {
+  const [apiKey, setApiKey] = useState(process.env.NEXT_PUBLIC_OKTO_CLIENT_API || "");
+  const [buildType, setBuildType] = useState(BuildType.SANDBOX);
+  const { data: session } = useSession();
+
+  async function handleGAuthCb() {
+    if(session) {
+      return session.id_token;
+    }
+    await signIn("google");
+    return "";
+  }
   return (
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
@@ -65,7 +84,13 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
+      <AppContext.Provider value={{ apiKey, setApiKey, buildType, setBuildType }}>
+      <OktoProvider apiKey={apiKey} buildType={buildType} gAuthCb={handleGAuthCb}>
+        {children}
+      </OktoProvider>
+    </AppContext.Provider>
     </>
+    
   );
 };
 
