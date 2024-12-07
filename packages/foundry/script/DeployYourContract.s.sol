@@ -5,6 +5,7 @@ import "./DeployHelpers.s.sol";
 import { ArtistFactory } from "src/ArtistFactory.sol";
 import { ArtistNFT } from "src/ArtistNFT.sol";
 import { ART } from "src/ART.sol";
+import { MockUSDC } from "src/MockUSDC.sol";
 import { Staking } from "src/Staking.sol";
 contract DeployYourContract is ScaffoldETHDeploy {
   // use `deployer` from `ScaffoldETHDeploy`
@@ -13,7 +14,8 @@ contract DeployYourContract is ScaffoldETHDeploy {
     ArtistNFT artist =
       new ArtistNFT("SHAN", "SH4", deployer, uint256(5));
     ART art = new ART();
-    Staking staking = new Staking(1 days, );
+    MockUSDC usdc = new MockUSDC();
+    Staking staking = new Staking(1 hours, 10, 300, address(usdc), address(art), 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     console.logString(
       string.concat(
         "ArtistFactory deployed at: ", vm.toString(address(artistFactory))
